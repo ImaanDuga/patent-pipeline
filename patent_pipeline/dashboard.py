@@ -1,302 +1,181 @@
 """
-Patent Intelligence Dashboard
-Interactive web app built with Streamlit for exploring patent data.
-
-Run with: streamlit run dashboard.py
+Patent Intelligence Dashboard - Main Landing Page
+Run with: streamlit run patent_pipeline/dashboard.py
 """
 
 import streamlit as st
-import pandas as pd
 import sqlite3
-import plotly.express as px
-import plotly.graph_objects as go
 import os
 
-# ── Configuration ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Patent Intelligence Dashboard",
-    page_icon="📊",
+    page_icon="🔬",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
+# ── Shared CSS ─────────────────────────────────────────────────────────────────
+st.markdown("""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+    .stApp { background-color: #f0f4f8; }
+    .hero-banner {
+        background: linear-gradient(135deg, #0d2b5e 0%, #1a4a8a 60%, #1565c0 100%);
+        padding: 2.5rem 2rem; border-radius: 12px; margin-bottom: 1.5rem; color: white;
+    }
+    .hero-banner h1 { font-size: 2.4rem; font-weight: 700; margin: 0 0 0.4rem 0; }
+    .hero-banner p  { font-size: 1.05rem; opacity: 0.85; margin: 0; }
+    .hero-badge {
+        display: inline-block; background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.3); border-radius: 20px;
+        padding: 0.2rem 0.8rem; font-size: 0.78rem; margin-bottom: 0.8rem;
+    }
+    .metric-card {
+        background: white; border-radius: 10px; padding: 1.2rem 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07); border-left: 4px solid #1565c0;
+    }
+    .metric-label { font-size: 0.78rem; font-weight: 600; color: #64748b;
+        text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 0.4rem; }
+    .metric-value { font-size: 2rem; font-weight: 700; color: #0d2b5e; line-height: 1; }
+    .metric-icon  { font-size: 1.5rem; float: right; margin-top: -0.2rem; }
+    .nav-card {
+        background: white; border-radius: 10px; padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07); text-align: center;
+        border-top: 4px solid #1565c0; transition: box-shadow 0.2s;
+    }
+    .nav-card h3 { color: #0d2b5e; margin: 0.5rem 0 0.3rem; font-size: 1.1rem; }
+    .nav-card p  { color: #64748b; font-size: 0.88rem; margin: 0; }
+    .nav-icon    { font-size: 2.2rem; }
+    [data-testid="stSidebar"] { background: #0d2b5e !important; }
+    [data-testid="stSidebar"] * { color: white !important; }
+    [data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.2) !important; }
+    #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
+</style>
+""", unsafe_allow_html=True)
+
 DB_PATH = os.path.join(os.path.dirname(__file__), 'patent_pipeline.db')
 
-# ── Database Connection ────────────────────────────────────────────────────────
 @st.cache_resource
 def get_connection():
     if not os.path.exists(DB_PATH):
-        st.error(f"Database not found at {DB_PATH}. Run the pipeline first.")
+        st.error("Database not found. Run the pipeline first.")
         st.stop()
     return sqlite3.connect(DB_PATH, check_same_thread=False)
 
-@st.cache_data
+import pandas as pd
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'pages'))
+from navbar import render_navbar
+
 def run_query(sql):
     conn = get_connection()
     return pd.read_sql_query(sql, conn)
 
-# ── Queries ────────────────────────────────────────────────────────────────────
-def get_summary_stats():
-    return run_query("""
-        SELECT 
-            (SELECT COUNT(*) FROM patents) AS total_patents,
-            (SELECT COUNT(*) FROM inventors) AS total_inventors,
-            (SELECT COUNT(*) FROM companies) AS total_companies,
-            (SELECT COUNT(DISTINCT country) FROM inventors WHERE country != 'Unknown') AS total_countries
-    """).iloc[0]
+render_navbar(active="overview")
 
-def get_top_inventors(limit=20):
-    return run_query(f"""
-        SELECT i.name, i.country, COUNT(pi.patent_id) AS patent_count
-        FROM inventors i
-        JOIN patent_inventor pi ON i.inventor_id = pi.inventor_id
-        GROUP BY i.inventor_id, i.name, i.country
-        ORDER BY patent_count DESC
-        LIMIT {limit}
-    """)
+# ── Hero ───────────────────────────────────────────────────────────────────────
+st.markdown("""
+<div class="hero-banner">
+    <div class="hero-badge">🔬 USPTO PatentsView Data</div>
+    <h1>Global Patent Intelligence</h1>
+    <p>Explore innovation trends, top inventors, leading companies, and geographic patent distribution across 100,000 granted patents.</p>
+</div>
+""", unsafe_allow_html=True)
 
-def get_top_companies(limit=20):
-    return run_query(f"""
-        SELECT c.name, COUNT(pc.patent_id) AS patent_count
-        FROM companies c
-        JOIN patent_company pc ON c.company_id = pc.company_id
-        GROUP BY c.company_id, c.name
-        ORDER BY patent_count DESC
-        LIMIT {limit}
-    """)
+# ── Metrics ────────────────────────────────────────────────────────────────────
+stats = run_query("""
+    SELECT
+        (SELECT COUNT(*) FROM patents)   AS total_patents,
+        (SELECT COUNT(*) FROM inventors) AS total_inventors,
+        (SELECT COUNT(*) FROM companies) AS total_companies,
+        (SELECT COUNT(DISTINCT country) FROM inventors WHERE country != 'Unknown') AS total_countries
+""").iloc[0]
 
-def get_top_countries(limit=15):
-    return run_query(f"""
-        SELECT i.country, COUNT(pi.patent_id) AS patent_count
-        FROM inventors i
-        JOIN patent_inventor pi ON i.inventor_id = pi.inventor_id
-        WHERE i.country != 'Unknown'
-        GROUP BY i.country
-        ORDER BY patent_count DESC
-        LIMIT {limit}
-    """)
+c1, c2, c3, c4 = st.columns(4)
+for col, icon, label, value in [
+    (c1, "📄", "Total Patents",   f"{int(stats['total_patents']):,}"),
+    (c2, "👤", "Total Inventors", f"{int(stats['total_inventors']):,}"),
+    (c3, "🏢", "Total Companies", f"{int(stats['total_companies']):,}"),
+    (c4, "🌍", "Countries",       f"{int(stats['total_countries']):,}"),
+]:
+    with col:
+        st.markdown(f"""
+        <div class="metric-card">
+            <span class="metric-icon">{icon}</span>
+            <div class="metric-label">{label}</div>
+            <div class="metric-value">{value}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-def get_trends():
-    return run_query("""
-        SELECT year, COUNT(*) AS patent_count
-        FROM patents
-        WHERE year IS NOT NULL
-        GROUP BY year
-        ORDER BY year
-    """)
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("---")
 
-def search_patents(query):
-    return run_query(f"""
-        SELECT patent_id, title, year
-        FROM patents
-        WHERE title LIKE '%{query}%'
-        LIMIT 100
-    """)
+# ── Navigation Cards ───────────────────────────────────────────────────────────
+st.markdown("### 📂 Explore the Data")
+st.markdown("Use the **sidebar** to navigate between sections, or click a card below.")
+st.markdown("<br>", unsafe_allow_html=True)
 
-# ── UI Components ──────────────────────────────────────────────────────────────
-def render_header():
-    st.title("📊 Global Patent Intelligence Dashboard")
-    st.markdown("Explore patent data from the USPTO PatentsView database")
-    st.divider()
+st.markdown("""
+<style>
+    div[data-testid="column"] button {
+        height: 120px !important;
+        white-space: pre-wrap !important;
+        font-size: 1rem !important;
+        border-radius: 10px !important;
+        border: 1px solid #e2e8f0 !important;
+        background: white !important;
+        color: #0d2b5e !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07) !important;
+        border-top: 4px solid #1565c0 !important;
+    }
+    div[data-testid="column"] button:hover {
+        box-shadow: 0 4px 16px rgba(21,101,192,0.2) !important;
+        border-top: 4px solid #0d2b5e !important;
+    }
+</style>
+""", unsafe_allow_html=True)
 
-def render_summary():
-    stats = get_summary_stats()
-    
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.metric("Total Patents", f"{int(stats['total_patents']):,}")
-    with col2:
-        st.metric("Total Inventors", f"{int(stats['total_inventors']):,}")
-    with col3:
-        st.metric("Total Companies", f"{int(stats['total_companies']):,}")
-    with col4:
-        st.metric("Countries", f"{int(stats['total_countries']):,}")
-    
-    st.divider()
+n1, n2, n3, n4, n5 = st.columns(5)
+with n1:
+    if st.button("🏆\n\nTop Inventors\n\nWho holds the most patents?", use_container_width=True):
+        st.switch_page("pages/1_Top_Inventors.py")
+with n2:
+    if st.button("🏢\n\nTop Companies\n\nLeading patent-holding firms", use_container_width=True):
+        st.switch_page("pages/2_Top_Companies.py")
+with n3:
+    if st.button("🌍\n\nTop Countries\n\nGeographic patent distribution", use_container_width=True):
+        st.switch_page("pages/3_Top_Countries.py")
+with n4:
+    if st.button("📈\n\nTrends\n\nPatent filings over time", use_container_width=True):
+        st.switch_page("pages/4_Trends.py")
+with n5:
+    if st.button("🔍\n\nSearch Patents\n\nFind patents by keyword", use_container_width=True):
+        st.switch_page("pages/5_Search.py")
 
-def render_top_inventors():
-    st.subheader("🏆 Top Inventors")
+# ── Sidebar ────────────────────────────────────────────────────────────────────
+with st.sidebar:
+    st.markdown("## 🔬 Patent Intel")
+    st.markdown("---")
+    st.markdown("### Navigate")
     
-    limit = st.slider("Number of inventors to show", 5, 50, 20, key="inv_slider")
-    df = get_top_inventors(limit)
+    if st.button("🏠 Overview", use_container_width=True, type="primary"):
+        st.switch_page("dashboard.py")
+    if st.button("🏆 Top Inventors", use_container_width=True):
+        st.switch_page("pages/1_Top_Inventors.py")
+    if st.button("🏢 Top Companies", use_container_width=True):
+        st.switch_page("pages/2_Top_Companies.py")
+    if st.button("🌍 Top Countries", use_container_width=True):
+        st.switch_page("pages/3_Top_Countries.py")
+    if st.button("📈 Trends", use_container_width=True):
+        st.switch_page("pages/4_Trends.py")
+    if st.button("🔍 Search Patents", use_container_width=True):
+        st.switch_page("pages/5_Search.py")
     
-    if df.empty:
-        st.warning("No inventor data available")
-        return
-    
-    fig = px.bar(
-        df, 
-        x='patent_count', 
-        y='name',
-        orientation='h',
-        color='country',
-        title=f'Top {limit} Inventors by Patent Count',
-        labels={'patent_count': 'Number of Patents', 'name': 'Inventor'},
-        height=max(400, limit * 20)
-    )
-    fig.update_layout(yaxis={'categoryorder': 'total ascending'})
-    st.plotly_chart(fig, use_container_width=True)
-    
-    with st.expander("📋 View Data Table"):
-        st.dataframe(df, use_container_width=True)
-
-def render_top_companies():
-    st.subheader("🏢 Top Companies")
-    
-    limit = st.slider("Number of companies to show", 5, 50, 20, key="comp_slider")
-    df = get_top_companies(limit)
-    
-    if df.empty:
-        st.warning("No company data available")
-        return
-    
-    fig = px.bar(
-        df,
-        x='patent_count',
-        y='name',
-        orientation='h',
-        title=f'Top {limit} Companies by Patent Count',
-        labels={'patent_count': 'Number of Patents', 'name': 'Company'},
-        color='patent_count',
-        color_continuous_scale='Blues',
-        height=max(400, limit * 20)
-    )
-    fig.update_layout(yaxis={'categoryorder': 'total ascending'})
-    st.plotly_chart(fig, use_container_width=True)
-    
-    with st.expander("📋 View Data Table"):
-        st.dataframe(df, use_container_width=True)
-
-def render_top_countries():
-    st.subheader("🌍 Top Countries")
-    
-    limit = st.slider("Number of countries to show", 5, 30, 15, key="country_slider")
-    df = get_top_countries(limit)
-    
-    if df.empty:
-        st.warning("No country data available")
-        return
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        fig_bar = px.bar(
-            df,
-            x='country',
-            y='patent_count',
-            title='Patent Count by Country',
-            labels={'patent_count': 'Number of Patents', 'country': 'Country'},
-            color='patent_count',
-            color_continuous_scale='Viridis'
-        )
-        st.plotly_chart(fig_bar, use_container_width=True)
-    
-    with col2:
-        fig_pie = px.pie(
-            df,
-            values='patent_count',
-            names='country',
-            title='Patent Distribution by Country'
-        )
-        st.plotly_chart(fig_pie, use_container_width=True)
-    
-    with st.expander("📋 View Data Table"):
-        st.dataframe(df, use_container_width=True)
-
-def render_trends():
-    st.subheader("📈 Patent Trends Over Time")
-    
-    df = get_trends()
-    
-    if df.empty:
-        st.warning("No trend data available")
-        return
-    
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=df['year'],
-        y=df['patent_count'],
-        mode='lines+markers',
-        name='Patents',
-        line=dict(color='#2196F3', width=3),
-        marker=dict(size=6),
-        fill='tozeroy',
-        fillcolor='rgba(33, 150, 243, 0.1)'
-    ))
-    
-    fig.update_layout(
-        title='Patent Filings Over Time',
-        xaxis_title='Year',
-        yaxis_title='Number of Patents',
-        hovermode='x unified',
-        height=400
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
-    
-    with st.expander("📋 View Data Table"):
-        st.dataframe(df, use_container_width=True)
-
-def render_search():
-    st.subheader("🔍 Search Patents")
-    
-    query = st.text_input("Search by patent title", placeholder="e.g., machine learning, battery, semiconductor")
-    
-    if query:
-        df = search_patents(query)
-        
-        if df.empty:
-            st.info(f"No patents found matching '{query}'")
-        else:
-            st.success(f"Found {len(df)} patents matching '{query}'")
-            st.dataframe(
-                df,
-                use_container_width=True,
-                column_config={
-                    "patent_id": "Patent ID",
-                    "title": st.column_config.TextColumn("Title", width="large"),
-                    "year": "Year"
-                }
-            )
-
-# ── Main App ───────────────────────────────────────────────────────────────────
-def main():
-    render_header()
-    render_summary()
-    
-    # Sidebar navigation
-    st.sidebar.title("Navigation")
-    page = st.sidebar.radio(
-        "Select a view:",
-        ["Overview", "Top Inventors", "Top Companies", "Top Countries", "Trends", "Search Patents"]
-    )
-    
-    st.sidebar.divider()
-    st.sidebar.markdown("### About")
-    st.sidebar.info(
-        "This dashboard visualizes patent data from the USPTO PatentsView database. "
-        "Use the navigation to explore different aspects of the data."
-    )
-    
-    # Render selected page
-    if page == "Overview":
-        col1, col2 = st.columns(2)
-        with col1:
-            render_top_inventors()
-        with col2:
-            render_top_companies()
-        render_trends()
-    elif page == "Top Inventors":
-        render_top_inventors()
-    elif page == "Top Companies":
-        render_top_companies()
-    elif page == "Top Countries":
-        render_top_countries()
-    elif page == "Trends":
-        render_trends()
-    elif page == "Search Patents":
-        render_search()
-
-if __name__ == '__main__':
-    main()
+    st.markdown("---")
+    st.markdown("**Data Source**")
+    st.markdown("USPTO PatentsView\n\n100,000 granted patents")
+    st.markdown("---")
+    st.markdown("<small style='opacity:0.6'>Global Patent Intelligence<br>Cloud Computing Project</small>",
+                unsafe_allow_html=True)
