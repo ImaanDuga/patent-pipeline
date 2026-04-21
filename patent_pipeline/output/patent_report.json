@@ -1,0 +1,135 @@
+{
+  "total_patents": 100000,
+  "top_inventors": [
+    {
+      "name": "Shunpei Yamazaki",
+      "patent_count": 36
+    },
+    {
+      "name": "Kia Silverbrook",
+      "patent_count": 23
+    },
+    {
+      "name": "Tao Luo",
+      "patent_count": 16
+    },
+    {
+      "name": "Junyi Li",
+      "patent_count": 13
+    },
+    {
+      "name": "Bartley K. Andre",
+      "patent_count": 12
+    },
+    {
+      "name": "Duncan Robert Kerr",
+      "patent_count": 11
+    },
+    {
+      "name": "Gurtej S. Sandhu",
+      "patent_count": 11
+    },
+    {
+      "name": "Jing Sun",
+      "patent_count": 11
+    },
+    {
+      "name": "Matthew Dean Rohrbach",
+      "patent_count": 11
+    },
+    {
+      "name": "Christopher J. Stringer",
+      "patent_count": 10
+    }
+  ],
+  "top_companies": [
+    {
+      "name": "SAMSUNG DISPLAY CO., LTD.",
+      "patent_count": 2065
+    },
+    {
+      "name": "International Business Machines Corporation",
+      "patent_count": 1788
+    },
+    {
+      "name": "CANON KABUSHIKI KAISHA",
+      "patent_count": 1048
+    },
+    {
+      "name": "SONY GROUP CORPORATION",
+      "patent_count": 765
+    },
+    {
+      "name": "Fujitsu Limited",
+      "patent_count": 651
+    },
+    {
+      "name": "Kabushiki Kaisha Toshiba",
+      "patent_count": 602
+    },
+    {
+      "name": "HITACHI, LTD.",
+      "patent_count": 583
+    },
+    {
+      "name": "Intel Corporation",
+      "patent_count": 581
+    },
+    {
+      "name": "MITSUBISHI ELECTRIC CORPORATION",
+      "patent_count": 561
+    },
+    {
+      "name": "General Electric Company",
+      "patent_count": 553
+    }
+  ],
+  "top_countries": [
+    {
+      "country": "US",
+      "patent_count": 48135
+    },
+    {
+      "country": "JP",
+      "patent_count": 16747
+    },
+    {
+      "country": "DE",
+      "patent_count": 5825
+    },
+    {
+      "country": "KR",
+      "patent_count": 5301
+    },
+    {
+      "country": "CN",
+      "patent_count": 4363
+    },
+    {
+      "country": "TW",
+      "patent_count": 2681
+    },
+    {
+      "country": "FR",
+      "patent_count": 2041
+    },
+    {
+      "country": "GB",
+      "patent_count": 2040
+    },
+    {
+      "country": "CA",
+      "patent_count": 1933
+    },
+    {
+      "country": "IN",
+      "patent_count": 1120
+    }
+  ],
+  "yearly_trends": [
+    {
+      "year": 2018,
+      "patent_count": 100000
+    }
+  ]
+}
