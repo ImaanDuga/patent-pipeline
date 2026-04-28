@@ -139,19 +139,19 @@ st.markdown("""
 
 n1, n2, n3, n4, n5 = st.columns(5)
 with n1:
-    if st.button("🏆\n\nTop Inventors\n\nWho holds the most patents?", use_container_width=True):
+    if st.button("🏆\n\nTop Inventors\n\nWho holds the most patents?", width='stretch'):
         st.switch_page("pages/1_Top_Inventors.py")
 with n2:
-    if st.button("🏢\n\nTop Companies\n\nLeading patent-holding firms", use_container_width=True):
+    if st.button("🏢\n\nTop Companies\n\nLeading patent-holding firms", width='stretch'):
         st.switch_page("pages/2_Top_Companies.py")
 with n3:
-    if st.button("🌍\n\nTop Countries\n\nGeographic patent distribution", use_container_width=True):
+    if st.button("🌍\n\nTop Countries\n\nGeographic patent distribution", width='stretch'):
         st.switch_page("pages/3_Top_Countries.py")
 with n4:
-    if st.button("📈\n\nTrends\n\nPatent filings over time", use_container_width=True):
+    if st.button("📈\n\nTrends\n\nPatent filings over time", width='stretch'):
         st.switch_page("pages/4_Trends.py")
 with n5:
-    if st.button("🔍\n\nSearch Patents\n\nFind patents by keyword", use_container_width=True):
+    if st.button("🔍\n\nSearch Patents\n\nFind patents by keyword", width='stretch'):
         st.switch_page("pages/5_Search.py")
 
 # ── Sidebar ────────────────────────────────────────────────────────────────────
@@ -160,17 +160,17 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### Navigate")
     
-    if st.button("🏠 Overview", use_container_width=True, type="primary"):
+    if st.button("🏠 Overview", width='stretch', type="primary"):
         st.switch_page("dashboard.py")
-    if st.button("🏆 Top Inventors", use_container_width=True):
+    if st.button("🏆 Top Inventors", width='stretch'):
         st.switch_page("pages/1_Top_Inventors.py")
-    if st.button("🏢 Top Companies", use_container_width=True):
+    if st.button("🏢 Top Companies", width='stretch'):
         st.switch_page("pages/2_Top_Companies.py")
-    if st.button("🌍 Top Countries", use_container_width=True):
+    if st.button("🌍 Top Countries", width='stretch'):
         st.switch_page("pages/3_Top_Countries.py")
-    if st.button("📈 Trends", use_container_width=True):
+    if st.button("📈 Trends", width='stretch'):
         st.switch_page("pages/4_Trends.py")
-    if st.button("🔍 Search Patents", use_container_width=True):
+    if st.button("🔍 Search Patents", width='stretch'):
         st.switch_page("pages/5_Search.py")
     
     st.markdown("---")

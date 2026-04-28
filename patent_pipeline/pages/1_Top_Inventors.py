@@ -48,17 +48,17 @@ def get_top_inventors(limit):
 with st.sidebar:
     st.markdown("## 🔬 Patent Intel")
     st.markdown("---")
-    if st.button("🏠 Overview", use_container_width=True):
+    if st.button("🏠 Overview", width='stretch'):
         st.switch_page("dashboard.py")
-    if st.button("🏆 Top Inventors", use_container_width=True, type="primary"):
+    if st.button("🏆 Top Inventors", width='stretch', type="primary"):
         st.switch_page("pages/1_Top_Inventors.py")
-    if st.button("🏢 Top Companies", use_container_width=True):
+    if st.button("🏢 Top Companies", width='stretch'):
         st.switch_page("pages/2_Top_Companies.py")
-    if st.button("🌍 Top Countries", use_container_width=True):
+    if st.button("🌍 Top Countries", width='stretch'):
         st.switch_page("pages/3_Top_Countries.py")
-    if st.button("📈 Trends", use_container_width=True):
+    if st.button("📈 Trends", width='stretch'):
         st.switch_page("pages/4_Trends.py")
-    if st.button("🔍 Search Patents", use_container_width=True):
+    if st.button("🔍 Search Patents", width='stretch'):
         st.switch_page("pages/5_Search.py")
 
 render_navbar(active="inventors")
@@ -95,11 +95,11 @@ else:
         margin=dict(t=60, b=40, l=40, r=20),
         hoverlabel=dict(bgcolor='#0d2b5e', font_color='white')
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
     st.markdown("---")
     st.markdown("#### 📋 Full Data Table")
     st.dataframe(
         df.rename(columns={'name': 'Inventor', 'country': 'Country', 'patent_count': 'Patents'}),
-        use_container_width=True, hide_index=True
+        width='stretch', hide_index=True
     )

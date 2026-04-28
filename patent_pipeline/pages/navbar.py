@@ -61,22 +61,22 @@ def render_navbar(active="overview"):
     cols = st.columns([1, 1.2, 1.2, 1.2, 1, 1])
     
     with cols[0]:
-        if st.button("🏠 Overview", use_container_width=True, type="primary" if active == "overview" else "secondary", key="nav_overview"):
+        if st.button("🏠 Overview", width='stretch', type="primary" if active == "overview" else "secondary", key="nav_overview"):
             st.switch_page(os.path.join(base, "dashboard.py"))
     with cols[1]:
-        if st.button("🏆 Top Inventors", use_container_width=True, type="primary" if active == "inventors" else "secondary", key="nav_inventors"):
+        if st.button("🏆 Top Inventors", width='stretch', type="primary" if active == "inventors" else "secondary", key="nav_inventors"):
             st.switch_page(os.path.join(base, "pages", "1_Top_Inventors.py"))
     with cols[2]:
-        if st.button("🏢 Top Companies", use_container_width=True, type="primary" if active == "companies" else "secondary", key="nav_companies"):
+        if st.button("🏢 Top Companies", width='stretch', type="primary" if active == "companies" else "secondary", key="nav_companies"):
             st.switch_page(os.path.join(base, "pages", "2_Top_Companies.py"))
     with cols[3]:
-        if st.button("🌍 Top Countries", use_container_width=True, type="primary" if active == "countries" else "secondary", key="nav_countries"):
+        if st.button("🌍 Top Countries", width='stretch', type="primary" if active == "countries" else "secondary", key="nav_countries"):
             st.switch_page(os.path.join(base, "pages", "3_Top_Countries.py"))
     with cols[4]:
-        if st.button("📈 Trends", use_container_width=True, type="primary" if active == "trends" else "secondary", key="nav_trends"):
+        if st.button("📈 Trends", width='stretch', type="primary" if active == "trends" else "secondary", key="nav_trends"):
             st.switch_page(os.path.join(base, "pages", "4_Trends.py"))
     with cols[5]:
-        if st.button("🔍 Search", use_container_width=True, type="primary" if active == "search" else "secondary", key="nav_search"):
+        if st.button("🔍 Search", width='stretch', type="primary" if active == "search" else "secondary", key="nav_search"):
             st.switch_page(os.path.join(base, "pages", "5_Search.py"))
     
     st.markdown("---")
