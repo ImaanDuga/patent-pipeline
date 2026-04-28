@@ -54,7 +54,18 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'patent_pipeline.db')
+def _find_db():
+    candidates = [
+        os.path.join(os.path.dirname(__file__), 'patent_pipeline.db'),
+        os.path.join(os.path.dirname(__file__), '..', 'patent_pipeline.db'),
+        os.path.join(os.getcwd(), 'patent_pipeline', 'patent_pipeline.db'),
+        os.path.join(os.getcwd(), 'patent_pipeline.db'),
+    ]
+    for p in candidates:
+        if os.path.exists(p):
+            return p
+    return candidates[0]
+DB_PATH = _find_db()
 
 @st.cache_resource
 def get_connection():
