@@ -17,7 +17,11 @@ st.markdown("""
     .page-header h2 { margin: 0; font-size: 1.6rem; }
     .page-header p  { margin: 0.3rem 0 0; opacity: 0.85; font-size: 0.95rem; }
     [data-testid="stSidebar"] { background: #0d2b5e !important; }
-    [data-testid="stSidebar"] * { color: white !important; }
+    [data-testid="stSidebar"] { color: white !important; }
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label, [data-testid="stSidebar"] div.stMarkdown { color: white !important; }
+    [data-testid="stSidebar"] button { background-color: rgba(255,255,255,0.15) !important; color: white !important; border: 1px solid rgba(255,255,255,0.3) !important; }
+    [data-testid="stSidebar"] button:hover { background-color: rgba(255,255,255,0.3) !important; }
+    [data-testid="stSidebar"] button[kind="primary"] { background-color: rgba(255,255,255,0.35) !important; font-weight: 700 !important; }
     .stTextInput input {
         border-radius: 8px; border: 1.5px solid #cbd5e1;
         padding: 0.6rem 1rem; font-size: 1rem;

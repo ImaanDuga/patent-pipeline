@@ -48,7 +48,11 @@ st.markdown("""
     .nav-card p  { color: #64748b; font-size: 0.88rem; margin: 0; }
     .nav-icon    { font-size: 2.2rem; }
     [data-testid="stSidebar"] { background: #0d2b5e !important; }
-    [data-testid="stSidebar"] * { color: white !important; }
+    [data-testid="stSidebar"] { color: white !important; }
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label, [data-testid="stSidebar"] div.stMarkdown { color: white !important; }
+    [data-testid="stSidebar"] button { background-color: rgba(255,255,255,0.15) !important; color: white !important; border: 1px solid rgba(255,255,255,0.3) !important; }
+    [data-testid="stSidebar"] button:hover { background-color: rgba(255,255,255,0.3) !important; }
+    [data-testid="stSidebar"] button[kind="primary"] { background-color: rgba(255,255,255,0.35) !important; font-weight: 700 !important; }
     [data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.2) !important; }
     #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
 </style>
