@@ -21,33 +21,38 @@ def get_total_patents(conn):
     return pd.read_sql_query("SELECT COUNT(*) AS total FROM patents;", conn).iloc[0]['total']
 
 def console_report(results, total_patents):
-    print("\n")
-    print("=" * 52)
-    print("           PATENT INTELLIGENCE REPORT")
-    print("=" * 52)
-    print(f"  Total Patents: {int(total_patents):,}")
+    lines = []
+    lines.append("\n")
+    lines.append("=" * 52)
+    lines.append("           PATENT INTELLIGENCE REPORT")
+    lines.append("=" * 52)
+    lines.append(f"  Total Patents: {int(total_patents):,}")
 
-    print("\n  Top 5 Inventors:")
+    lines.append("\n  Top 5 Inventors:")
     if 'Q1_top_inventors' in results and not results['Q1_top_inventors'].empty:
         for i, row in results['Q1_top_inventors'].head(5).iterrows():
-            print(f"    {i+1}. {row['name']} — {int(row['patent_count'])} patents")
+            lines.append(f"    {i+1}. {row['name']} — {int(row['patent_count'])} patents")
 
-    print("\n  Top 5 Companies:")
+    lines.append("\n  Top 5 Companies:")
     if 'Q2_top_companies' in results and not results['Q2_top_companies'].empty:
         for i, row in results['Q2_top_companies'].head(5).iterrows():
-            print(f"    {i+1}. {row['name']} — {int(row['patent_count'])} patents")
+            lines.append(f"    {i+1}. {row['name']} — {int(row['patent_count'])} patents")
 
-    print("\n  Top 5 Countries:")
+    lines.append("\n  Top 5 Countries:")
     if 'Q3_top_countries' in results and not results['Q3_top_countries'].empty:
         for i, row in results['Q3_top_countries'].head(5).iterrows():
-            print(f"    {i+1}. {row['country']} — {int(row['patent_count'])} patents")
+            lines.append(f"    {i+1}. {row['country']} — {int(row['patent_count'])} patents")
 
-    print("\n  Patent Trends (last 5 years):")
+    lines.append("\n  Patent Trends (last 5 years):")
     if 'Q4_trends_over_time' in results and not results['Q4_trends_over_time'].empty:
         for _, row in results['Q4_trends_over_time'].tail(5).iterrows():
-            print(f"    {int(row['year'])}: {int(row['patent_count']):,} patents")
+            lines.append(f"    {int(row['year'])}: {int(row['patent_count']):,} patents")
 
-    print("=" * 52)
+    lines.append("=" * 52)
+
+    report_text = "\n".join(lines)
+    print(report_text)
+    return report_text
 
 def csv_reports(results, output_dir):
     exports = {
@@ -103,7 +108,13 @@ def main():
     conn.close()
 
     # A. Console report
-    console_report(results, total)
+    report_text = console_report(results, total)
+
+    # Save console report to file
+    console_path = os.path.join(OUTPUT_DIR, 'console_report.txt')
+    with open(console_path, 'w', encoding='utf-8') as f:
+        f.write(report_text)
+    print(f"  Saved: console_report.txt")
 
     # B. CSV reports
     print("\n  Exporting CSVs ...")
