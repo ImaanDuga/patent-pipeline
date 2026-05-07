@@ -1,5 +1,14 @@
 # Global Patent Intelligence Data Pipeline
 
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/ImaanDuga/patent-pipeline)
+[![Streamlit App](https://img.shields.io/badge/Streamlit-Live%20Dashboard-red?logo=streamlit)](https://h5c2sts64arf4hbkwrqhja.streamlit.app/)
+
+## 🔗 Quick Links
+- **Live Dashboard:** [https://h5c2sts64arf4hbkwrqhja.streamlit.app/](https://h5c2sts64arf4hbkwrqhja.streamlit.app/)
+- **GitHub Repo:** [https://github.com/ImaanDuga/patent-pipeline](https://github.com/ImaanDuga/patent-pipeline)
+
+---
+
 A complete data engineering pipeline that collects, cleans, stores, and analyzes real-world patent data from the USPTO PatentsView database.
 
 ## 📊 Project Overview
