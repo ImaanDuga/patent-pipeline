@@ -1,0 +1,31 @@
+
+
+====================================================
+           PATENT INTELLIGENCE REPORT
+====================================================
+  Total Patents: 100,000
+
+  Top 5 Inventors:
+    1. Shunpei Yamazaki — 36 patents
+    2. Kia Silverbrook — 23 patents
+    3. Tao Luo — 16 patents
+    4. Junyi Li — 13 patents
+    5. Bartley K. Andre — 12 patents
+
+  Top 5 Companies:
+    1. SAMSUNG DISPLAY CO., LTD. — 2065 patents
+    2. International Business Machines Corporation — 1788 patents
+    3. CANON KABUSHIKI KAISHA — 1048 patents
+    4. SONY GROUP CORPORATION — 765 patents
+    5. Fujitsu Limited — 651 patents
+
+  Top 5 Countries:
+    1. US — 48135 patents
+    2. JP — 16747 patents
+    3. DE — 5825 patents
+    4. KR — 5301 patents
+    5. CN — 4363 patents
+
+  Patent Trends (last 5 years):
+    2018: 100,000 patents
+====================================================
