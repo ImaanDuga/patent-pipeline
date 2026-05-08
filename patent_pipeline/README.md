@@ -113,7 +113,7 @@ python patent_pipeline/scripts/05_reports.py
 The pipeline runs 7 analytical queries:
 
 1. **Q1: Top Inventors** — Who has the most patents?
-2. **Q2: Top Companies** — Which companies own the most patents?
+2. **Q2: Top Companies** —  Which companies own the most patents?
 3. **Q3: Top Countries** — Which countries produce the most patents?
 4. **Q4: Trends Over Time** — Patent counts by year
 5. **Q5: JOIN Query** — Combines patents with inventors and companies
